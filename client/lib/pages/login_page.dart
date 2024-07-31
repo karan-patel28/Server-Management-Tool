@@ -1,17 +1,52 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:client/pages/home_page.dart';
 import 'package:client/components/my_button.dart';
 import 'package:client/components/my_textfield.dart';
-import 'package:client/components/square_tile.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  // text editing controllers
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // Text editing controllers
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // sign user in method
-  void signUserIn() {}
+  // Method to handle login
+  Future<void> login() async {
+    const url = 'http://192.168.0.248:8080/api/users/login';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': usernameController.text,
+          'password': passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Navigate to the HomePage upon successful login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+        print('Login successful');
+      } else {
+        print('Failed to login: ${response.statusCode}');
+        // Optionally handle the error state here, e.g., showing a dialog
+      }
+    } catch (e) {
+      print('Error during login: $e');
+      // Optionally handle the error state here, e.g., showing a dialog
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +62,7 @@ class LoginPage extends StatelessWidget {
                 children: [
                   const SizedBox(height: 50),
 
-                  // logo
+                  // Logo
                   const Icon(
                     Icons.lock,
                     size: 100,
@@ -35,9 +70,9 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 50),
 
-                  // welcome back, you've been missed!
+                  // Welcome message
                   Text(
-                    'Welcome back you\'ve been missed!',
+                    'Welcome back, you\'ve been missed!',
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 16,
@@ -46,7 +81,7 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 25),
 
-                  // username textfield
+                  // Username textfield
                   MyTextField(
                     controller: usernameController,
                     hintText: 'Username',
@@ -55,7 +90,7 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  // password textfield
+                  // Password textfield
                   MyTextField(
                     controller: passwordController,
                     hintText: 'Password',
@@ -64,7 +99,7 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  // forgot password?
+                  // Forgot password?
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -80,31 +115,10 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 25),
 
-                  // sign in button
+                  // Sign in button
                   MyButton(
-                    onTap: signUserIn,
+                    onTap: login,
                   ),
-
-                  const SizedBox(height: 50),
-
-                  // not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Not a member?',
-                        style: TextStyle(color: Colors.grey[700]),
-                      ),
-                      const SizedBox(width: 4),
-                      const Text(
-                        'Register now',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),
