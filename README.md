@@ -9,9 +9,9 @@ A mobile application for managing server operations such as shutting down, resta
 - **Monitoring**: Real-time monitoring of CPU usage, storage usage, and system temperature.
 - **Cross-Platform**: Built with Flutter, the app runs on both Android and iOS.
 
-## Screenshots
+<!-- ## Screenshots
 
-_Add screenshots or GIFs of your app here_
+_Add screenshots or GIFs of your app here_ -->
 
 ## Installation
 
